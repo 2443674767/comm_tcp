@@ -1,0 +1,14 @@
+.git
+.env
+certs
+data
+.test-data
+node_modules
+test-results
+playwright-report
+bin
+dist
+docs
+tests
+package*.json
+playwright.config.js

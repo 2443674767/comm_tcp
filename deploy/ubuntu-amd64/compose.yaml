@@ -1,0 +1,35 @@
+name: lan-chat
+services:
+  chat:
+    image: lan-chat:2026.11.13-video-photo-amd64
+    platform: linux/amd64
+    pull_policy: never
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      LISTEN_ADDR: ":18086"
+      VOICE_HOST_IP: ${SERVER_IP:-}
+      VOICE_UDP_ADDR: ":18087"
+      VOICE_TCP_ADDR: ":18085"
+      DATA_DIR: /data
+      TLS_CERT: /certs/server.crt
+      TLS_KEY: /certs/server.key
+      TLS_CA: /certs/ca.crt
+    volumes:
+      - chat-data:/data
+      - ./certs/server.crt:/certs/server.crt:ro
+      - ./certs/server.key:/certs/server.key:ro
+      - ./certs/ca.crt:/certs/ca.crt:ro
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    stop_grace_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+volumes:
+  chat-data:

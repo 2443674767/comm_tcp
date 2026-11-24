@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#16796f"><title>邻语 · 局域网聊天室</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2316796f'/%3E%3Cpath d='M16 18h32v24H30l-10 8v-8h-4z' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css?v=video-photo-1"><script type="module" src="/app.js?v=video-photo-1"></script>
+</head>
+<body>
+  <div id="notice" role="status" aria-live="polite" hidden></div>
+  <main id="login-screen" class="login-screen">
+    <section class="login-card">
+      <div class="brand-icon" aria-hidden="true">邻</div><span class="eyebrow">LAN CHAT / 在同一个网络里</span>
+      <h1>邻近一点，<br>聊得自在。</h1><p class="intro">一个属于大家的小聊天室。<br>写下昵称，和在线的伙伴打个招呼。</p>
+      <form id="login-form"><label for="nickname">你的昵称</label><input id="nickname" autocomplete="nickname" maxlength="24" placeholder="大家怎么称呼你？" required><button class="primary" id="login-submit" type="submit">进入聊天室 <span aria-hidden="true">↗</span></button><p id="login-error" class="error" role="alert"></p></form>
+      <div class="login-features"><span>✦ 共享聊天记录</span><span>◉ 语音消息</span><span>♫ 群语音</span></div>
+      <p class="fineprint">无需密码 · 昵称仅用于显示 · 登录后可查看全部历史消息</p>
+    </section>
+    <aside class="login-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="art-bubble bubble-one">在吗？一起聊聊。<i>刚刚</i></div><div class="art-bubble bubble-two">当然，随时在线。<span>✦</span></div><div class="sound-card"><div class="sound-bars"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div><small>让声音，拉近距离</small></div><div class="art-caption">SAME NETWORK.<br>MORE CONNECTION.</div></aside>
+  </main>
+  <main id="app" class="app-shell" hidden>
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-icon small" aria-hidden="true">邻</div><div><strong>邻语</strong><span>LAN CHAT</span></div><span class="local-badge">局域网</span></div>
+      <section class="channel-nav" aria-label="频道">
+        <label for="channel-select">当前频道</label>
+        <div class="channel-picker"><select id="channel-select" aria-label="当前频道"><option value="public">公共频道</option></select><button id="new-channel" class="secondary" aria-label="创建频道" title="创建频道">＋</button></div>
+        <form id="channel-form" hidden><label for="channel-name">频道名称</label><input id="channel-name" maxlength="24" placeholder="给频道起个名字" required><div><button class="primary" type="submit" id="create-channel">确认创建</button><button type="button" id="cancel-channel" class="text-button">取消</button></div><p id="channel-error" class="error" role="alert"></p></form>
+        <button id="sound-toggle" class="text-button" aria-label="关闭提示音" aria-pressed="true">提示音：开</button><small id="sound-help">点击页面后启用提示音</small>
+      </section>
+      <section class="voice-card" aria-labelledby="voice-title">
+        <div class="section-heading"><h2 id="voice-title">♫ 群语音</h2><span id="voice-count">0 / 5</span></div>
+        <small id="voice-diagnostic" hidden></small><p id="voice-status">随时加入，一起聊聊</p><div id="voice-members" class="voice-members"></div>
+        <button id="join-voice" class="primary">加入群语音</button>
+        <div id="voice-controls" class="voice-controls" hidden><button id="mute-voice" class="secondary" aria-label="静音麦克风">静音</button><button id="leave-voice" class="danger" aria-label="退出群语音">退出语音</button></div>
+        <div id="camera-controls" class="camera-controls" hidden><button id="camera-toggle" class="secondary" aria-pressed="false">开启摄像头</button><button id="camera-switch" class="secondary" disabled>切换镜头</button></div>
+        <button id="invite-open" class="secondary invite-open">拉人进语音</button>
+        <button id="enable-audio" class="text-button" hidden>点击开启通话声音</button>
+        <small class="voice-hint">自由加入 · 最多 5 人 · 通话不录制</small>
+      </section>
+      <section class="online-section"><div class="section-heading"><h2>在线伙伴</h2><span id="online-count">0</span></div><ul id="online-users"></ul></section>
+      <div class="profile"><div id="my-avatar" class="avatar"></div><div class="profile-copy"><strong id="my-name"></strong><small>在这里，畅所欲言</small></div><button id="logout" class="icon-button" aria-label="退出登录" title="退出登录">↪</button></div>
+    </aside>
+    <section class="chat-panel" aria-label="频道聊天">
+      <header class="chat-header"><div><h1><span>#</span> <strong id="channel-title">公共频道</strong></h1><p>消息与录音会保留，晚来的伙伴也不会错过。</p></div><div id="connection" class="connection"><i></i><span id="connection-label">连接中</span></div></header>
+      <section id="video-grid" class="video-grid" aria-label="视频通话" hidden></section>
+      <div id="messages-scroll" class="messages-scroll"><button id="load-older" class="load-older" hidden>查看更早的消息 ↑</button><div id="empty-state" class="empty-state"><span>✦</span><h2>好聊的事，从一句你好开始</h2><p>文字、语音，或直接加入群语音。<br>每个频道，拥有独立的聊天和语音。</p></div><div id="messages" aria-live="polite" aria-relevant="additions"></div></div>
+      <button id="new-messages" class="new-messages" hidden>有新消息 ↓</button>
+      <div class="composer-wrap">
+        <section id="record-panel" class="record-panel" aria-label="录音预览" hidden><div class="record-top"><span id="record-label">● 正在录音</span><strong id="record-time">00:00</strong></div><audio id="record-preview" controls hidden></audio><div class="record-actions"><button id="discard-record" class="text-button">取消录音</button><button id="stop-record" class="secondary" aria-label="结束录音">结束录音</button><button id="send-record" class="primary" aria-label="发送录音" hidden>发送录音 ↑</button></div></section>
+        <form id="message-form"><div class="composer"><textarea id="message-input" aria-label="消息内容" placeholder="说点什么，让大家听见…" rows="2" maxlength="4000"></textarea><div class="composer-toolbar"><button id="record-button" type="button" class="record-button" aria-label="录制语音"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg><span>语音消息</span></button><span id="char-count" class="char-count">0 / 4000</span><button id="send-button" type="submit" class="primary send-button" aria-label="发送消息">发送 <span aria-hidden="true">↑</span></button></div></div></form>
+        <div class="composer-foot"><span>当前频道的伙伴都能看到消息</span><span>Enter 发送 · Shift + Enter 换行</span></div>
+      </div>
+    </section>
+  </main>
+  <div id="incoming-invites" class="incoming-invites"></div>
+  <div id="invite-overlay" class="overlay" hidden>
+    <section class="invite-picker" role="dialog" aria-modal="true" aria-labelledby="invite-title">
+      <div class="section-heading"><h2 id="invite-title">拉人进语音</h2><button id="invite-all" type="button" class="text-button">全选</button></div>
+      <p class="invite-intro">勾选在线的伙伴，不限频道。对方会听到铃声，接受后自动切换到本频道并加入语音。</p>
+      <ul id="invite-list"></ul><p id="invite-empty" class="invite-empty" hidden>暂时没有其他在线伙伴</p>
+      <p id="invite-error" class="error" role="alert"></p>
+      <div class="invite-actions"><button id="invite-cancel" type="button" class="text-button">取消</button><button id="invite-send" type="button" class="primary" disabled>拉进语音</button></div>
+    </section>
+  </div>
+  <div id="remote-audio" hidden></div>
+</body>
+</html>

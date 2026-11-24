@@ -1,0 +1,10 @@
+/data/
+/certs/
+/.test-data/
+/node_modules/
+/test-results/
+/playwright-report/
+/bin/
+/dist/
+/.env
+.DS_Store
